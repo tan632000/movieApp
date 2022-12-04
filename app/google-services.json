@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1021483067670",
+    "firebase_url": "https://movie-streaming-91d94-default-rtdb.firebaseio.com",
+    "project_id": "movie-streaming-91d94",
+    "storage_bucket": "movie-streaming-91d94.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021483067670:android:5075ac1e797cd6a0808837",
+        "android_client_info": {
+          "package_name": "com.example.movie_streaming"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021483067670-ke953t7fde87l8bu9lof0beio4959sq5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnhnV8zUsWVkm22OBR0b_aMxtYqvhK4mo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1021483067670-ke953t7fde87l8bu9lof0beio4959sq5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

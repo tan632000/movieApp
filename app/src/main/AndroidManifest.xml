@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.movie_streaming">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Movie_Streaming">
+        <activity android:name=".FavoriteMovie"></activity>
+        <activity android:name=".SignInGoogle" />
+        <activity android:name=".RegisterGmail" />
+        <activity android:name=".RegisterFacebook" />
+        <activity android:name=".RegisterScreen" />
+        <activity android:name=".LoginScreen" />
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".VideoPlayer"
+            android:screenOrientation="landscape" />
+        <activity android:name=".MovieDetail" />
+
+        <service android:name=".services.FloatingWidgetService" />
+
+        <activity
+            android:name=".SplashScreen"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

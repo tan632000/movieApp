@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">MovieStream</string>
+    <string name="welcome">Welcome</string>
+    <string name="signin">Sign in to continue</string>
+    <string name="user">Email</string>
+    <string name="pass">Password</string>
+    <string name="forgotpass">Forgot password</string>
+    <string name="login">Login</string>
+    <string name="or">or</string>
+    <string name="signup">SignUp</string>
+    <string name="singup_title">SignUp</string>
+    <string name="singup_slogan">Signup for free</string>
+    <string name="name">Name</string>
+    <string name="signup_fb">SignUp with Facebook</string>
+    <string name="signup_gg">SignUp with Gmail</string>
+    <string name="email">Email</string>
+    <string name="signin_gg">SignIn with Gmail</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_fav">Favorite</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_account">Account</string>
+    <string name="nav_profile">My Profile</string>
+    <string name="nav_chancePass">Change Password</string>
+    <string name="nav_logout">Logout</string>
+</resources>
