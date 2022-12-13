@@ -110,6 +110,7 @@
             android:textColor="@color/white"
             android:fontFamily="@font/antic"
             android:transitionName="btn_trans"
+            android:textAllCaps="false"
             android:textSize="20sp"/>
         <TextView
             android:layout_width="wrap_content"

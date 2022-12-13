@@ -47,7 +47,6 @@ public class FavoriteMovie extends AppCompatActivity implements FavoriteAdapter.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_movie);
-
         initUI();
         swipe();
     }
@@ -55,7 +54,6 @@ public class FavoriteMovie extends AppCompatActivity implements FavoriteAdapter.
     @SuppressLint("ResourceAsColor")
     private void initUI() {
         searchView = findViewById(R.id.search_view);
-        //searchView.clearFocus();
         layout = findViewById(R.id.layout_main_fav);
         mdata = new ArrayList<>();
         imgBack = findViewById(R.id.imgBack_frg);
@@ -215,28 +213,6 @@ public class FavoriteMovie extends AppCompatActivity implements FavoriteAdapter.
             }
         });
     }
-
-//    private List<Favorite> getFavoriteList(FirebaseUser user) {
-//        List<Favorite> list = new ArrayList<>();
-//        reference = FirebaseDatabase.getInstance().getReference("favorite");
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot snapshot) {
-//                for (DataSnapshot data : snapshot.getChildren()) {
-//                    Favorite favorite = data.getValue(Favorite.class);
-//                    if (favorite.getUid().equals(user.getUid().toString())) {
-//                        list.add(favorite);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//
-//            }
-//        });
-//        return list;
-//    }
 
     @Override
     public void onFavoriteItemClick(int clickedItemIndex) {

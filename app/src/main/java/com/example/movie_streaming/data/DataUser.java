@@ -1,5 +1,7 @@
 package com.example.movie_streaming.data;
 
+import com.example.movie_streaming.model.CategoryItem;
+import com.example.movie_streaming.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -10,9 +12,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.example.movie_streaming.model.CategoryItem;
-import com.example.movie_streaming.model.User;
 
 public class DataUser implements Serializable {
 
@@ -25,14 +24,14 @@ public class DataUser implements Serializable {
     private DataUser() {
     }
 
-    public static DataUser getInstance(){
-        if(Instance == null){
+    public static DataUser getInstance() {
+        if (Instance == null) {
             Instance = new DataUser();
         }
         return Instance;
     }
 
-    public List<User> GetDataUser(){
+    public List<User> GetDataUser() {
         listUser = new ArrayList<>();
         favorites = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users");
@@ -50,7 +49,7 @@ public class DataUser implements Serializable {
                     CategoryItem item = data.child("favorite").getValue(CategoryItem.class);
                     favorites.add(item);
 
-                    User user = new User(USER, PASS, NAME, favorites,IMG);
+                    User user = new User(USER, PASS, NAME, favorites, IMG, null);
                     listUser.add(user);
                 }
             }

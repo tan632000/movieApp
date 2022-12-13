@@ -21,7 +21,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.movie_streaming.model.CategoryItem;
 import com.example.movie_streaming.model.User;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.Wave;
@@ -32,8 +31,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-
-import java.util.List;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterScreen extends AppCompatActivity implements View.OnClickListener {
 
@@ -44,17 +43,29 @@ public class RegisterScreen extends AppCompatActivity implements View.OnClickLis
     Button btnSignUp;
     LinearLayout linear;
     ProgressBar progressBar;
+    DatabaseReference reference;
+
+    private static void hideKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register_screen);
-
         initUI();
     }
 
     private void initUI() {
+        View someView = (View) findViewById(R.id.layout_register);
+        someView.setBackgroundColor(getResources().getColor(android.R.color.white));
+
         btnFB = findViewById(R.id.btn_reg_facebook);
         btnGG = findViewById(R.id.btn_reg_google);
         btnBack = findViewById(R.id.btnBack);
@@ -103,31 +114,13 @@ public class RegisterScreen extends AppCompatActivity implements View.OnClickLis
                 hideKeyboard(RegisterScreen.this);
 
                 //GET ALL VALUE
-                String USER = edtUser.getEditText().getText().toString();
-                String PASS = edtPass.getEditText().getText().toString();
-                String NAME = edtName.getEditText().getText().toString();
-                String IMG = "https://firebasestorage.googleapis.com/v0/b/moviestream-f6661.appspot.com/o/avatars%2Fuser1.jpg?alt=media&token=776839ac-1a14-47d9-a6fc-bd0b7314cbe8";
+                String userName = edtUser.getEditText().getText().toString();
+                String password = edtPass.getEditText().getText().toString();
+                String name = edtName.getEditText().getText().toString();
+                String avatar = "https://firebasestorage.googleapis.com/v0/b/moviestream-f6661.appspot.com/o/avatars%2Fuser1.jpg?alt=media&token=776839ac-1a14-47d9-a6fc-bd0b7314cbe8";
 
-  //              List<CategoryItem> fav = null;
-
- //               User user = new User(USER, PASS, NAME, fav, IMG);
-
-//                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
-//                reference.push().setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(Task<Void> task) {
-//
-//                        if (task.isSuccessful()) {
-//                            Toast.makeText(RegisterScreen.this, "Register Success!!", Toast.LENGTH_LONG).show();
-//                            progressBar.setVisibility(View.GONE);
-//                        } else {
-//                            Toast.makeText(RegisterScreen.this, "Fail", Toast.LENGTH_LONG).show();
-//                            progressBar.setVisibility(View.GONE);
-//                        }
-//                    }
-//                });
                 FirebaseAuth auth = FirebaseAuth.getInstance();
-                auth.createUserWithEmailAndPassword(USER, PASS).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                auth.createUserWithEmailAndPassword(userName, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -135,20 +128,22 @@ public class RegisterScreen extends AppCompatActivity implements View.OnClickLis
                             FirebaseUser user = auth.getCurrentUser();
 
                             UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(NAME)
-                                    .setPhotoUri(Uri.parse(IMG))
+                                    .setDisplayName(name)
+                                    .setPhotoUri(Uri.parse(avatar))
                                     .build();
+
+                            FirebaseFirestore.getInstance().collection("user").add(new User(userName, null, name, null, avatar, user.getUid()));
 
                             user.updateProfile(profileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(Task<Void> task) {
-                                    if(task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         Log.d("a", "update success");
                                         Intent intent = new Intent(RegisterScreen.this, MainActivity.class);
                                         startActivity(intent);
                                         finishAffinity();
                                         progressBar.setVisibility(View.GONE);
-                                    }else
+                                    } else
                                         Log.d("a", "update fail");
                                 }
                             });
@@ -160,7 +155,9 @@ public class RegisterScreen extends AppCompatActivity implements View.OnClickLis
                         progressBar.setVisibility(View.GONE);
                     }
                 });
-                //finish();
+
+
+
                 break;
             case R.id.btn_reg_facebook:
                 startActivity(new Intent(RegisterScreen.this, com.example.movie_streaming.RegisterFacebook.class));
@@ -173,15 +170,10 @@ public class RegisterScreen extends AppCompatActivity implements View.OnClickLis
 
     private Boolean validateUser() {
         String val = edtUser.getEditText().getText().toString().trim();
-        //String noWhiteSpace = "\\A\\w{4,20}\\z";
-        //String emailFormat = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$";
 
         if (val.isEmpty()) {
             edtUser.setError("Nhập email");
             return false;
-//        } else if (val.length() >= 15) {
-//            edtUser.setError("không được quá 15 ký tự");
-//            return false;
         } else if (!LoginScreen.VALIDATE_MAIL.matcher(val).matches()) {
             edtUser.setError("Email không hợp lệ");
             return false;
@@ -220,14 +212,5 @@ public class RegisterScreen extends AppCompatActivity implements View.OnClickLis
             edtName.setError(null);
             return true;
         }
-    }
-
-    private static void hideKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        View view = activity.getCurrentFocus();
-        if (view == null) {
-            view = new View(activity);
-        }
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

@@ -3,6 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/movieApp/app/src/main/res/drawable/custom_btn_arrow.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/movieApp/app/src/main/res/layout/activity_favorite_movie.xml" value="0.13632246376811594" />
+        <entry key="..\:/AndroidStudioProjects/movieApp/app/src/main/res/layout/activity_login_screen.xml" value="0.13632246376811594" />
+        <entry key="..\:/AndroidStudioProjects/movieApp/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/movieApp/app/src/main/res/layout/activity_movie_detail.xml" value="0.13632246376811594" />
+        <entry key="..\:/AndroidStudioProjects/movieApp/app/src/main/res/layout/activity_register_facebook.xml" value="0.13632246376811594" />
+        <entry key="..\:/AndroidStudioProjects/movieApp/app/src/main/res/layout/activity_register_gmail.xml" value="0.13632246376811594" />
+        <entry key="..\:/AndroidStudioProjects/movieApp/app/src/main/res/layout/activity_register_screen.xml" value="0.13632246376811594" />
+        <entry key="..\:/AndroidStudioProjects/movieApp/app/src/main/res/layout/activity_sign_in_google.xml" value="0.13632246376811594" />
+        <entry key="..\:/AndroidStudioProjects/movieApp/app/src/main/res/menu/menu_nav.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/movieApp/app/src/main/res/menu/menu_search.xml" value="0.2" />
         <entry key="..\:/Users/HP/Downloads/Movie_Streaming (1)/Movie_Streaming (1)/Movie_Streaming/app/src/main/res/drawable/custom_btn_login.xml" value="0.1505" />
         <entry key="..\:/Users/HP/Downloads/Movie_Streaming (1)/Movie_Streaming (1)/Movie_Streaming/app/src/main/res/drawable/custom_btn_login_facebook.xml" value="0.191" />
         <entry key="..\:/Users/HP/Downloads/Movie_Streaming (1)/Movie_Streaming (1)/Movie_Streaming/app/src/main/res/drawable/custom_btn_login_gmail.xml" value="0.191" />

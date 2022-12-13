@@ -19,7 +19,7 @@
         <activity android:name=".RegisterGmail" />
         <activity android:name=".RegisterFacebook" />
         <activity android:name=".RegisterScreen" />
-        <activity android:name=".LoginScreen" />
+        <activity android:name=".LoginScreen"/>
         <activity android:name=".MainActivity" />
         <activity
             android:name=".VideoPlayer"

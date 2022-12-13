@@ -1,34 +1,42 @@
 {
   "project_info": {
-    "project_number": "1021483067670",
-    "firebase_url": "https://movie-streaming-91d94-default-rtdb.firebaseio.com",
-    "project_id": "movie-streaming-91d94",
-    "storage_bucket": "movie-streaming-91d94.appspot.com"
+    "project_number": "523239170881",
+    "firebase_url": "https://movieapp-dd802-default-rtdb.firebaseio.com",
+    "project_id": "movieapp-dd802",
+    "storage_bucket": "movieapp-dd802.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1021483067670:android:5075ac1e797cd6a0808837",
+        "mobilesdk_app_id": "1:523239170881:android:26390dd4e97f95871677c0",
         "android_client_info": {
           "package_name": "com.example.movie_streaming"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1021483067670-ke953t7fde87l8bu9lof0beio4959sq5.apps.googleusercontent.com",
+          "client_id": "523239170881-753n7d28rbq40h80b2bfl5f01vut68fr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.movie_streaming",
+            "certificate_hash": "dd7ba08f965395913ecdb1b75864ebd261f0f135"
+          }
+        },
+        {
+          "client_id": "523239170881-j0o51moo29v1cavlhjs68f0fuujbma1l.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDnhnV8zUsWVkm22OBR0b_aMxtYqvhK4mo"
+          "current_key": "AIzaSyDBpYwMG4UD2u_N7pwUPC8Eey0dYNgiN1Y"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1021483067670-ke953t7fde87l8bu9lof0beio4959sq5.apps.googleusercontent.com",
+              "client_id": "523239170881-j0o51moo29v1cavlhjs68f0fuujbma1l.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

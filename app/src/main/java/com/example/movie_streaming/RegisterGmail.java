@@ -107,16 +107,12 @@ public class RegisterGmail extends AppCompatActivity implements View.OnClickList
                             .setPhotoUri(Uri.parse("https://firebasestorage.googleapis.com/v0/b/moviestream-f6661.appspot.com/o/avatars%2Fuser1.jpg?alt=media&token=776839ac-1a14-47d9-a6fc-bd0b7314cbe8"))
                             .build();
 
-                    user.updateProfile(profileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(Task<Void> task) {
-                            if(task.isSuccessful()){
-                                Intent intent = new Intent(RegisterGmail.this, MainActivity.class);
-                                startActivity(intent);
-
-                                finishAffinity();
-                                progressBar.setVisibility(View.GONE);
-                            }
+                    user.updateProfile(profileChangeRequest).addOnCompleteListener(task1 -> {
+                        if(task1.isSuccessful()){
+                            Intent intent = new Intent(RegisterGmail.this, MainActivity.class);
+                            startActivity(intent);
+                            finishAffinity();
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
                 }

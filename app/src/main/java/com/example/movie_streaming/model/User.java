@@ -5,18 +5,19 @@ import java.io.Serializable;
 import java.util.List;
 
 public class User implements Serializable {
-    private String username, password, name, avatar;
+    private String username, password, name, avatar, uid;
     private List<CategoryItem> favorite;
 
     public User() {
     }
 
-    public User(String username, String password, String name, List<CategoryItem> favoriteMovie, String img) {
+    public User(String username, String password, String name, List<CategoryItem> favoriteMovie, String img, String uid) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.favorite = favoriteMovie;
         this.avatar = img;
+        this.uid = uid;
     }
 
     public String getUsername() {
@@ -57,5 +58,13 @@ public class User implements Serializable {
 
     public void setAvatar(String img) {
         this.avatar = img;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

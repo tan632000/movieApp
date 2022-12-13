@@ -19,7 +19,6 @@ public class VideoPlayer extends AppCompatActivity {
 
     private PlayerView playerView;
     private SimpleExoPlayer simpleExoPlayer;
-    private static final String FILE_URL="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +46,5 @@ public class VideoPlayer extends AppCompatActivity {
         super.onDestroy();
         simpleExoPlayer.setPlayWhenReady(false);
         simpleExoPlayer.release();
-//        Intent serviceIntent = new Intent(VideoPlayer.this, FloatingWidgetService.class);
-//        serviceIntent.putExtra("videoUri", Uri.parse(getIntent().getStringExtra("url")).toString());
-//        startService(serviceIntent);
     }
 }

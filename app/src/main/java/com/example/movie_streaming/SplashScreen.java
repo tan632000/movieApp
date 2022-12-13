@@ -12,8 +12,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SplashScreen extends AppCompatActivity {
+    private static final int SPLASH_SCREEN = 4200;
     LottieAnimationView splash;
-    private static int SPLASH_SCREEN = 4200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,17 +31,16 @@ public class SplashScreen extends AppCompatActivity {
         }, SPLASH_SCREEN);
     }
 
-    private void isLogin(){
+    private void isLogin() {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user == null){
-            Intent intent = new Intent(SplashScreen.this, com.example.movie_streaming.LoginScreen.class);
+        if (user == null) {
+            Intent intent = new Intent(SplashScreen.this, LoginScreen.class);
             startActivity(intent);
             finish();
-        }
-        else {
-            Intent intent = new Intent(SplashScreen.this,MainActivity.class);
+        } else {
+            Intent intent = new Intent(SplashScreen.this, MainActivity.class);
             startActivity(intent);
             finish();
         }

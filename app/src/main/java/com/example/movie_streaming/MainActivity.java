@@ -3,15 +3,11 @@ package com.example.movie_streaming;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -30,14 +26,10 @@ import com.example.movie_streaming.adapter.MainRecycleAdapter;
 import com.example.movie_streaming.model.AllCategory;
 import com.example.movie_streaming.model.BannerMovie;
 import com.example.movie_streaming.model.CategoryItem;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,6 +45,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements MainRecycleAdapter.ListItemClickListener, View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
+    public static final int FRAGMENT_FAVORITE = 1;
+    public static final String NAV_SEARCH_KEY = "nav_search";
     BannerMovieAdapter bannerMovieAdapter;
     MainRecycleAdapter mainRecycleAdapter;
     TabLayout tabIndicater, tabCategory;
@@ -69,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
     TextView txtName, txtUsername;
     NavigationView navigationView;
     Toolbar toolbar;
-    public static final int FRAGMENT_FAVORITE = 1;
-    public static final String NAV_SEARCH_KEY = "nav_search";
     int currentFragment;
 
     @Override
@@ -227,14 +219,14 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
     private void showUserInfomation() {
         if (user == null)
             return;
-        if (user.getDisplayName().toString() == null) {
+        if (user.getDisplayName() == null) {
             txtName.setVisibility(View.GONE);
         } else {
             txtName.setVisibility(View.VISIBLE);
-            txtName.setText(user.getDisplayName().toString());
+            txtName.setText(user.getDisplayName());
         }
-        txtUsername.setText(user.getEmail().toString());
-        Glide.with(MainActivity.this).load(user.getPhotoUrl().toString()).error(R.drawable.user1).into(imgUser);
+        txtUsername.setText(user.getEmail());
+        Glide.with(MainActivity.this).load(user.getPhotoUrl()).error(R.drawable.user1).into(imgUser);
     }
 
     private void setCategoryAdapter(List<AllCategory> listCategory) {
@@ -298,11 +290,11 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_fav:
-                startActivity(new Intent(MainActivity.this, FavoriteMovie.class));
+                startActivity(new Intent(this, FavoriteMovie.class));
                 drawerLayout.closeDrawer(GravityCompat.END);
                 break;
             case R.id.nav_search:
-                Intent intent = new Intent(MainActivity.this, FavoriteMovie.class);
+                Intent intent = new Intent(this, FavoriteMovie.class);
                 intent.putExtra(NAV_SEARCH_KEY, "nav_search");
                 startActivity(intent);
                 drawerLayout.closeDrawer(GravityCompat.END);
@@ -319,6 +311,15 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_layout, fragment);
         transaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+            drawerLayout.closeDrawer(GravityCompat.END);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     public class AutoSlider extends TimerTask {
@@ -339,15 +340,6 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
                     viewPager.setCurrentItem(0);
                 }
             });
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
-            drawerLayout.closeDrawer(GravityCompat.END);
-        } else {
-            super.onBackPressed();
         }
     }
 }
