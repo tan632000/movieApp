@@ -101,7 +101,7 @@ public class FavoriteMovie extends AppCompatActivity implements FavoriteAdapter.
                 }
                 for (DataSnapshot data : snapshot.getChildren()) {
                     Favorite favorite = data.getValue(Favorite.class);
-                    if (favorite.getUid().compareTo(user.getUid()) == 0) {
+                    if (favorite.getUserUid() != null && favorite.getUserUid().compareTo(user.getUid()) == 0) {
                         mdata.add(favorite);
                         adapter = new FavoriteAdapter(FavoriteMovie.this, mdata, FavoriteMovie.this::onFavoriteItemClick);
                         rcvFav.setAdapter(adapter);
@@ -171,7 +171,7 @@ public class FavoriteMovie extends AppCompatActivity implements FavoriteAdapter.
     private void removeFavorite(FirebaseUser user, Favorite item) {
         Favorite currenFavorite;
 
-        currenFavorite = new Favorite(item.getId(), item.getName(), item.getImg(), item.getType(), item.getVideo(), item.getUid());
+        currenFavorite = new Favorite(item.getId(), item.getName(), item.getImg(), item.getType(), item.getVideo(), item.getUserUid());
 
         reference = FirebaseDatabase.getInstance().getReference("favorite");
         reference.addValueEventListener(new ValueEventListener() {
@@ -181,7 +181,7 @@ public class FavoriteMovie extends AppCompatActivity implements FavoriteAdapter.
 
                     Favorite favorite = data.getValue(Favorite.class);
 
-                    if (favorite.getUid().compareTo(currenFavorite.getUid()) == 0) {
+                    if (favorite.getUserUid().compareTo(currenFavorite.getUserUid()) == 0) {
                         if (String.valueOf(favorite.getId()).compareTo(String.valueOf(currenFavorite.getId())) == 0) {
                             reference.child(data.getKey()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

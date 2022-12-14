@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MovieDetail extends AppCompatActivity implements View.OnClickListener {
     CategoryItem categoryItem;
@@ -36,6 +37,7 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
     boolean ADD = true;
     boolean UnADD = false;
     boolean IS_ADD = UnADD;
+    String favoriteUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,10 +125,11 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
 
                     Favorite favorite = data.getValue(Favorite.class);
 
-                    if (favorite.getUid().compareTo(currenFavorite.getUid()) == 0) {
+                    if (favorite.getUserUid() != null && favorite.getUserUid().compareTo(currenFavorite.getUserUid()) == 0) {
                         if (String.valueOf(favorite.getId()).compareTo(String.valueOf(currenFavorite.getId())) == 0) {
-                            IS_ADD = ADD;
                             imgAdd.setImageResource(R.drawable.ic_baseline_add_red);
+                            IS_ADD = ADD;
+                            favoriteUid = data.getKey();
                             break;
                         }
                     }
@@ -149,38 +152,22 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
         } else {
             currenFavorite = favoriteItem;
         }
+
         reference = FirebaseDatabase.getInstance().getReference("favorite");
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.child(favoriteUid).removeValue();
+
+        FirebaseFirestore.getInstance().collection("favorite").document(favoriteUid).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot data : snapshot.getChildren()) {
-
-                    Favorite favorite = data.getValue(Favorite.class);
-
-                    if (favorite.getUid().compareTo(currenFavorite.getUid()) == 0) {
-                        if (String.valueOf(favorite.getId()).compareTo(String.valueOf(currenFavorite.getId())) == 0) {
-                            reference.child(data.getKey()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(MovieDetail.this, "Đã xóa khỏi mục ưa thích", Toast.LENGTH_LONG).show();
-                                        IS_ADD = UnADD;
-                                        imgAdd.setImageResource(R.drawable.ic_baseline_add_24);
-                                    } else {
-                                        Toast.makeText(MovieDetail.this, "Thất bại", Toast.LENGTH_LONG).show();
-                                        IS_ADD = ADD;
-                                        imgAdd.setImageResource(R.drawable.ic_baseline_add_red);
-                                    }
-                                }
-                            });
-                        }
-                    }
+            public void onComplete(Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(MovieDetail.this, "Đã xóa khỏi mục ưa thích", Toast.LENGTH_LONG).show();
+                    IS_ADD = UnADD;
+                    imgAdd.setImageResource(R.drawable.ic_baseline_add_24);
+                } else {
+                    Toast.makeText(MovieDetail.this, "Thất bại", Toast.LENGTH_LONG).show();
+                    IS_ADD = ADD;
+                    imgAdd.setImageResource(R.drawable.ic_baseline_add_red);
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-
             }
         });
     }
@@ -210,5 +197,7 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
                 }
             }
         });
+
+        FirebaseFirestore.getInstance().collection("favorite").add(favorite);
     }
 }

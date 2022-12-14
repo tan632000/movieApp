@@ -3,19 +3,19 @@ package com.example.movie_streaming.model;
 import java.io.Serializable;
 
 public class Favorite implements Serializable {
-    private String name, img, type, video, uid;
+    private String name, img, type, video, userUid;
     private long id;
 
     public Favorite() {
     }
 
-    public Favorite(long id, String name, String img, String type, String video, String uid) {
+    public Favorite(long id, String name, String img, String type, String video, String userUid) {
         this.id = id;
         this.name = name;
         this.img = img;
         this.type = type;
         this.video = video;
-        this.uid = uid;
+        this.userUid = userUid;
     }
 
     public long getId() {
@@ -58,11 +58,11 @@ public class Favorite implements Serializable {
         this.video = video;
     }
 
-    public String getUid() {
-        return uid;
+    public String getUserUid() {
+        return userUid;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setUserUid(String userUid) {
+        this.userUid = userUid;
     }
 }
