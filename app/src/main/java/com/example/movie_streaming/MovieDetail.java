@@ -108,40 +108,40 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    private void checkFavorite() {
-        Favorite currenFavorite;
-        if (movie != null) {
-            currenFavorite = new Favorite(movie.getId(), movie.getName(), movie.getImg(), movie.getType(), movie.getVideo(), user.getUid());
-        } else if (bannerItem != null) {
-            currenFavorite = new Favorite(null, bannerItem.getName(), bannerItem.getImg(), bannerItem.getType(), bannerItem.getVideo(), user.getUid());
-        } else {
-            currenFavorite = favoriteItem;
-        }
-        reference = FirebaseDatabase.getInstance().getReference("favorite");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot data : snapshot.getChildren()) {
-
-                    Favorite favorite = data.getValue(Favorite.class);
-
-                    if (favorite.getUserUid() != null && favorite.getUserUid().compareTo(currenFavorite.getUserUid()) == 0) {
-                        if (String.valueOf(favorite.getId()).compareTo(String.valueOf(currenFavorite.getId())) == 0) {
-                            imgAdd.setImageResource(R.drawable.ic_baseline_add_red);
-                            IS_ADD = ADD;
-                            favoriteUid = data.getKey();
-                            break;
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-
-            }
-        });
-    }
+//    private void checkFavorite() {
+//        Favorite currenFavorite;
+//        if (movie != null) {
+//            currenFavorite = new Favorite(movie.getId(), movie.getName(), movie.getImg(), movie.getType(), movie.getVideo(), user.getUid());
+//        } else if (bannerItem != null) {
+//            currenFavorite = new Favorite(null, bannerItem.getName(), bannerItem.getImg(), bannerItem.getType(), bannerItem.getVideo(), user.getUid());
+//        } else {
+//            currenFavorite = favoriteItem;
+//        }
+//        reference = FirebaseDatabase.getInstance().getReference("favorite");
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                for (DataSnapshot data : snapshot.getChildren()) {
+//
+//                    Favorite favorite = data.getValue(Favorite.class);
+//
+//                    if (favorite.getUserUid() != null && favorite.getUserUid().compareTo(currenFavorite.getUserUid()) == 0) {
+//                        if (String.valueOf(favorite.getId()).compareTo(String.valueOf(currenFavorite.getId())) == 0) {
+//                            imgAdd.setImageResource(R.drawable.ic_baseline_add_red);
+//                            IS_ADD = ADD;
+//                            favoriteUid = data.getKey();
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//
+//            }
+//        });
+//    }
 //
 //    private void removeFavorite(FirebaseUser user) {
 //        Favorite currenFavorite;
