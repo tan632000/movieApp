@@ -23,26 +23,18 @@ public class SplashScreen extends AppCompatActivity {
 
         splash = findViewById(R.id.splash_main);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                isLogin();
-            }
-        }, SPLASH_SCREEN);
+        new Handler().postDelayed(this::isLogin, SPLASH_SCREEN);
     }
 
     private void isLogin() {
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+        Intent intent;
         if (user == null) {
-            Intent intent = new Intent(SplashScreen.this, LoginScreen.class);
-            startActivity(intent);
-            finish();
+            intent = new Intent(SplashScreen.this, LoginScreen.class);
         } else {
-            Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            intent = new Intent(SplashScreen.this, MainActivity.class);
         }
+        startActivity(intent);
+        finish();
     }
 }

@@ -9,49 +9,49 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
 import com.example.movie_streaming.R;
-import com.example.movie_streaming.model.AllCategory;
-import com.example.movie_streaming.model.CategoryItem;
+import com.example.movie_streaming.model.Movie;
+
+import java.util.List;
+import java.util.Map;
 
 public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.MainViewHolder> {
 
     Context context;
-    List<AllCategory> listCategory;
+    List<Map<String, Object>> categoryWithMovies;
     final private ListItemClickListener mOnClickListener;
 
-    public MainRecycleAdapter(Context context, List<AllCategory> listCategory, ListItemClickListener mOnClickListener) {
+    public MainRecycleAdapter(Context context, List<Map<String, Object>> categoryWithMovies, ListItemClickListener mOnClickListener) {
         this.context = context;
-        this.listCategory = listCategory;
+        this.categoryWithMovies = categoryWithMovies;
         this.mOnClickListener = mOnClickListener;
     }
 
     @Override
-    public MainViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
+    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_all_category, parent, false);
         return new MainViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder( MainViewHolder holder, int position) {
-        AllCategory allCategory = listCategory.get(position);
-        holder.txtTitle.setText(allCategory.getCateTitle());
-        setItemRecycle(holder.rcvItem, allCategory.getListCategoryItem());
+    public void onBindViewHolder(MainViewHolder holder, int position) {
+        Map<String, Object> item = categoryWithMovies.get(position);
+        holder.txtTitle.setText(item.get("category").toString());
+        setItemRecycle(holder.rcvItem, (List) item.get("movies"));
     }
 
-    private void setItemRecycle(RecyclerView rcvItem, List<CategoryItem> listCategoryItem) {
-        CategoryItemAdapter categoryItemAdapter = new CategoryItemAdapter(context,listCategoryItem);
+    private void setItemRecycle(RecyclerView rcvItem, List<Movie> movies) {
+        MovieAdapter movieAdapter = new MovieAdapter(context, movies);
         rcvItem.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
-        rcvItem.setAdapter(categoryItemAdapter);
+        rcvItem.setAdapter(movieAdapter);
     }
 
     @Override
     public int getItemCount() {
-        return listCategory.size();
+        return categoryWithMovies.size();
     }
 
-    public interface ListItemClickListener{
+    public interface ListItemClickListener {
         void onCategoryItemClick(int clickedItemIndex);
     }
 
@@ -59,6 +59,7 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
         TextView txtTitle;
         RecyclerView rcvItem;
+
         public MainViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);

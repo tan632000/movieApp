@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 public class Favorite implements Serializable {
     private String name, img, type, video, userUid;
-    private long id;
+    private String id;
 
     public Favorite() {
     }
 
-    public Favorite(long id, String name, String img, String type, String video, String userUid) {
+    public Favorite(String id, String name, String img, String type, String video, String userUid) {
         this.id = id;
         this.name = name;
         this.img = img;
@@ -18,11 +18,11 @@ public class Favorite implements Serializable {
         this.userUid = userUid;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

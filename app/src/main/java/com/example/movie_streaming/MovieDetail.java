@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.movie_streaming.model.BannerMovie;
-import com.example.movie_streaming.model.CategoryItem;
 import com.example.movie_streaming.model.Favorite;
+import com.example.movie_streaming.model.Movie;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MovieDetail extends AppCompatActivity implements View.OnClickListener {
-    CategoryItem categoryItem;
+    Movie movie;
     BannerMovie bannerItem;
     Favorite favoriteItem;
     ImageView imgDetail, imgBack, imgAdd;
@@ -46,7 +46,7 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         favoriteItem = (Favorite) getIntent().getSerializableExtra("favorite_item");
-        categoryItem = (CategoryItem) getIntent().getSerializableExtra("category_item");
+        movie = (Movie) getIntent().getSerializableExtra("movie");
         bannerItem = (BannerMovie) getIntent().getSerializableExtra("banner");
 
         initUI();
@@ -58,11 +58,11 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
         btnPlay = findViewById(R.id.btnPlay);
         imgBack = findViewById(R.id.imgBack);
         imgAdd = findViewById(R.id.imgAdd);
-        checkFavorite();
+//        checkFavorite();
 
-        if (categoryItem != null) {
-            Glide.with(this).load(categoryItem.getImg()).into(imgDetail);
-            txtDetail.setText(categoryItem.getName());
+        if (movie != null) {
+            Glide.with(this).load(movie.getImg()).into(imgDetail);
+            txtDetail.setText(movie.getName());
         } else if (bannerItem != null) {
             Glide.with(this).load(bannerItem.getImg()).into(imgDetail);
             txtDetail.setText(bannerItem.getName());
@@ -75,8 +75,8 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MovieDetail.this, VideoPlayer.class);
-                if (categoryItem != null) {
-                    intent.putExtra("url", categoryItem.getVideo());
+                if (movie != null) {
+                    intent.putExtra("url", movie.getVideo());
                     startActivity(intent);
                 } else if (bannerItem != null) {
                     intent.putExtra("url", bannerItem.getVideo());
@@ -100,7 +100,7 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.imgAdd:
                 if (!IS_ADD) {
-                    addToFavorite(user);
+//                    addToFavorite(user);
                 } else {
                     Toast.makeText(MovieDetail.this, "Phim đã tồn tại trong mục ưa thích", Toast.LENGTH_LONG).show();
                 }
@@ -110,10 +110,10 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
 
     private void checkFavorite() {
         Favorite currenFavorite;
-        if (categoryItem != null) {
-            currenFavorite = new Favorite(categoryItem.getId(), categoryItem.getName(), categoryItem.getImg(), categoryItem.getType(), categoryItem.getVideo(), user.getUid());
+        if (movie != null) {
+            currenFavorite = new Favorite(movie.getId(), movie.getName(), movie.getImg(), movie.getType(), movie.getVideo(), user.getUid());
         } else if (bannerItem != null) {
-            currenFavorite = new Favorite(bannerItem.getId(), bannerItem.getName(), bannerItem.getImg(), bannerItem.getType(), bannerItem.getVideo(), user.getUid());
+            currenFavorite = new Favorite(null, bannerItem.getName(), bannerItem.getImg(), bannerItem.getType(), bannerItem.getVideo(), user.getUid());
         } else {
             currenFavorite = favoriteItem;
         }
@@ -142,62 +142,62 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
             }
         });
     }
-
-    private void removeFavorite(FirebaseUser user) {
-        Favorite currenFavorite;
-        if (categoryItem != null) {
-            currenFavorite = new Favorite(categoryItem.getId(), categoryItem.getName(), categoryItem.getImg(), categoryItem.getType(), categoryItem.getVideo(), user.getUid());
-        } else if (bannerItem != null) {
-            currenFavorite = new Favorite(bannerItem.getId(), bannerItem.getName(), bannerItem.getImg(), bannerItem.getType(), bannerItem.getVideo(), user.getUid());
-        } else {
-            currenFavorite = favoriteItem;
-        }
-
-        reference = FirebaseDatabase.getInstance().getReference("favorite");
-        reference.child(favoriteUid).removeValue();
-
-        FirebaseFirestore.getInstance().collection("favorite").document(favoriteUid).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(MovieDetail.this, "Đã xóa khỏi mục ưa thích", Toast.LENGTH_LONG).show();
-                    IS_ADD = UnADD;
-                    imgAdd.setImageResource(R.drawable.ic_baseline_add_24);
-                } else {
-                    Toast.makeText(MovieDetail.this, "Thất bại", Toast.LENGTH_LONG).show();
-                    IS_ADD = ADD;
-                    imgAdd.setImageResource(R.drawable.ic_baseline_add_red);
-                }
-            }
-        });
-    }
-
-    private void addToFavorite(FirebaseUser user) {
-        Favorite favorite;
-        if (categoryItem != null) {
-            favorite = new Favorite(categoryItem.getId(), categoryItem.getName(), categoryItem.getImg(), categoryItem.getType(), categoryItem.getVideo(), user.getUid());
-        } else if (bannerItem != null) {
-            favorite = new Favorite(bannerItem.getId(), bannerItem.getName(), bannerItem.getImg(), bannerItem.getType(), bannerItem.getVideo(), user.getUid());
-        } else {
-            favorite = favoriteItem;
-        }
-
-        reference = FirebaseDatabase.getInstance().getReference("favorite");
-        reference.push().setValue(favorite).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(MovieDetail.this, "Đã thêm vào mục yêu thích", Toast.LENGTH_LONG).show();
-                    IS_ADD = ADD;
-                    imgAdd.setImageResource(R.drawable.ic_baseline_add_red);
-                } else {
-                    Toast.makeText(MovieDetail.this, "Thất bại", Toast.LENGTH_LONG).show();
-                    IS_ADD = UnADD;
-                    imgAdd.setImageResource(R.drawable.ic_baseline_add_24);
-                }
-            }
-        });
-
-        FirebaseFirestore.getInstance().collection("favorite").add(favorite);
-    }
+//
+//    private void removeFavorite(FirebaseUser user) {
+//        Favorite currenFavorite;
+//        if (movie != null) {
+//            currenFavorite = new Favorite(movie.getId(), movie.getName(), movie.getImg(), movie.getType(), movie.getVideo(), user.getUid());
+//        } else if (bannerItem != null) {
+//            currenFavorite = new Favorite(null, bannerItem.getName(), bannerItem.getImg(), bannerItem.getType(), bannerItem.getVideo(), user.getUid());
+//        } else {
+//            currenFavorite = favoriteItem;
+//        }
+//
+//        reference = FirebaseDatabase.getInstance().getReference("favorite");
+//        reference.child(favoriteUid).removeValue();
+//
+//        FirebaseFirestore.getInstance().collection("favorite").document(favoriteUid).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(Task<Void> task) {
+//                if (task.isSuccessful()) {
+//                    Toast.makeText(MovieDetail.this, "Đã xóa khỏi mục ưa thích", Toast.LENGTH_LONG).show();
+//                    IS_ADD = UnADD;
+//                    imgAdd.setImageResource(R.drawable.ic_baseline_add_24);
+//                } else {
+//                    Toast.makeText(MovieDetail.this, "Thất bại", Toast.LENGTH_LONG).show();
+//                    IS_ADD = ADD;
+//                    imgAdd.setImageResource(R.drawable.ic_baseline_add_red);
+//                }
+//            }
+//        });
+//    }
+//
+//    private void addToFavorite(FirebaseUser user) {
+//        Favorite favorite;
+//        if (movie != null) {
+//            favorite = new Favorite(movie.getId(), movie.getName(), movie.getImg(), movie.getType(), movie.getVideo(), user.getUid());
+//        } else if (bannerItem != null) {
+//            favorite = new Favorite(null, bannerItem.getName(), bannerItem.getImg(), bannerItem.getType(), bannerItem.getVideo(), user.getUid());
+//        } else {
+//            favorite = favoriteItem;
+//        }
+//
+//        reference = FirebaseDatabase.getInstance().getReference("favorite");
+//        reference.push().setValue(favorite).addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(Task<Void> task) {
+//                if (task.isSuccessful()) {
+//                    Toast.makeText(MovieDetail.this, "Đã thêm vào mục yêu thích", Toast.LENGTH_LONG).show();
+//                    IS_ADD = ADD;
+//                    imgAdd.setImageResource(R.drawable.ic_baseline_add_red);
+//                } else {
+//                    Toast.makeText(MovieDetail.this, "Thất bại", Toast.LENGTH_LONG).show();
+//                    IS_ADD = UnADD;
+//                    imgAdd.setImageResource(R.drawable.ic_baseline_add_24);
+//                }
+//            }
+//        });
+//
+//        FirebaseFirestore.getInstance().collection("favorite").add(favorite);
+//    }
 }

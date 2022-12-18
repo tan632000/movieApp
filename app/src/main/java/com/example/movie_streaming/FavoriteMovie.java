@@ -61,7 +61,7 @@ public class FavoriteMovie extends AppCompatActivity implements FavoriteAdapter.
         rcvFav = findViewById(R.id.recycle_fav);
         rcvFav.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        if (getIntent().getStringExtra(MainActivity.NAV_SEARCH_KEY) != null) {
+        if (getIntent().getStringExtra("nav_search") != null) {
             //search page -> get all movies
             handleSearchPage();
         } else {
@@ -128,7 +128,7 @@ public class FavoriteMovie extends AppCompatActivity implements FavoriteAdapter.
                 }
                 for (DataSnapshot data : snapshot.getChildren()) {
                     CategoryItem movie = data.getValue(CategoryItem.class);
-                    Favorite favorite = new Favorite(movie.getId(), movie.getName(), movie.getImg(),
+                    Favorite favorite = new Favorite(null, movie.getName(), movie.getImg(),
                             movie.getType(), movie.getVideo(), user.getUid());
                     mdata.add(favorite);
                     adapter = new FavoriteAdapter(FavoriteMovie.this, mdata, FavoriteMovie.this::onFavoriteItemClick);

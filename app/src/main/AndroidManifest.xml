@@ -16,8 +16,6 @@
         android:theme="@style/Theme.Movie_Streaming">
         <activity android:name=".FavoriteMovie"></activity>
         <activity android:name=".SignInGoogle" />
-        <activity android:name=".RegisterGmail" />
-        <activity android:name=".RegisterFacebook" />
         <activity android:name=".RegisterScreen" />
         <activity android:name=".LoginScreen"/>
         <activity android:name=".MainActivity" />

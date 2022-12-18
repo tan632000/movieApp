@@ -4,10 +4,12 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -23,9 +25,11 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.example.movie_streaming.adapter.BannerMovieAdapter;
 import com.example.movie_streaming.adapter.MainRecycleAdapter;
-import com.example.movie_streaming.model.AllCategory;
 import com.example.movie_streaming.model.BannerMovie;
-import com.example.movie_streaming.model.CategoryItem;
+import com.example.movie_streaming.model.Category;
+import com.example.movie_streaming.model.Movie;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,9 +39,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,103 +54,55 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements MainRecycleAdapter.ListItemClickListener, View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
-    public static final int FRAGMENT_FAVORITE = 1;
-    public static final String NAV_SEARCH_KEY = "nav_search";
-    BannerMovieAdapter bannerMovieAdapter;
-    MainRecycleAdapter mainRecycleAdapter;
-    TabLayout tabIndicater, tabCategory;
-    ViewPager viewPager;
-    RecyclerView categoryRecycle;
-    List<BannerMovie> listHomeBanner, listTvShowBanner, listMovieBanner, listKidBanner;
-    List<AllCategory> listCategory;
-    List<CategoryItem> listItem1, listItem2, listItem3, listItem4, listItem5;
-    DatabaseReference databaseReference;
-    CircleImageView imgAvatar, imgUser;
-    String avatar;
-    FirebaseUser user;
-    DrawerLayout drawerLayout;
-    TextView txtName, txtUsername;
-    NavigationView navigationView;
-    Toolbar toolbar;
-    int currentFragment;
+    private final String TAG = "MainActivity";
+    private List<BannerMovie> listHomeBanner, listTvShowBanner, listMovieBanner, listKidBanner;
+    private TabLayout tabIndicater, tabCategory;
+    private TextView txtName, txtUsername;
+    private FirebaseFirestore fireStore;
+    private List<Category> categories;
+    private DrawerLayout drawerLayout;
+    private CircleImageView imgUser;
+    private ViewPager viewPager;
+    private List<Movie> movies;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //FirebaseAuth.getInstance().signOut();
-        checkAndRequesPermissions();
+        checkAndRequestPermissions();
 
-        toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
-
-        drawerLayout = findViewById(R.id.drawerLayout);
-        imgAvatar = findViewById(R.id.imgAvatar);
+        fireStore = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (savedInstanceState != null) {
-            avatar = savedInstanceState.getString("avatar");
-            Glide.with(MainActivity.this).load(avatar).error(R.drawable.user1).into(imgAvatar);
-        } else if (avatar == null && user != null) {
-            avatar = user.getPhotoUrl().toString();
-            Glide.with(MainActivity.this).load(avatar).error(R.drawable.user1).into(imgAvatar);
-        }
 
         initUI();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("avatar", avatar);
-    }
+    private void checkAndRequestPermissions() {
+        String[] permissions = new String[]{
+                Manifest.permission.INTERNET
+        };
 
-    private void UpLoadMovie() {
-
-        listItem1 = new ArrayList<>();
-        listItem2 = new ArrayList<>();
-        listItem3 = new ArrayList<>();
-        listItem4 = new ArrayList<>();
-        listItem5 = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance().getReference("movies");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    CategoryItem uploadCategoryItem = postSnapshot.getValue(CategoryItem.class);
-                    if (uploadCategoryItem.getType().equals("TV Drama"))
-                        listItem1.add(uploadCategoryItem);
-                    if (uploadCategoryItem.getType().equals("Anime Series"))
-                        listItem2.add(uploadCategoryItem);
-                    if (uploadCategoryItem.getType().equals("Exciting Movies"))
-                        listItem3.add(uploadCategoryItem);
-                    if (uploadCategoryItem.getType().equals("Action Movies"))
-                        listItem4.add(uploadCategoryItem);
-                    if (uploadCategoryItem.getType().equals("Southeast Asian Movies"))
-                        listItem5.add(uploadCategoryItem);
-                }
-
-                listCategory = new ArrayList<>();
-
-                listCategory.add(new AllCategory(1, "TV Drama", listItem1));
-                listCategory.add(new AllCategory(2, "Anime Series", listItem2));
-                listCategory.add(new AllCategory(3, "Exciting Movies", listItem3));
-                listCategory.add(new AllCategory(5, "Action Movies", listItem4));
-                listCategory.add(new AllCategory(6, "Southeast Asian Movies", listItem5));
-
-                setCategoryAdapter(listCategory);
+        List<String> listPermissionNeeded = new ArrayList<>();
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                listPermissionNeeded.add(permission);
             }
+        }
+        if (!listPermissionNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionNeeded.toArray(new String[listPermissionNeeded.size()]), 1);
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-
-            }
-        });
-
+        }
     }
 
     private void initUI() {
-        navigationView = findViewById(R.id.nav_user);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
+
+        drawerLayout = findViewById(R.id.drawerLayout);
+        CircleImageView imgAvatar = findViewById(R.id.imgAvatar);
+
+        NavigationView navigationView = findViewById(R.id.nav_user);
         txtName = navigationView.getHeaderView(0).findViewById(R.id.txtNavName);
         txtUsername = navigationView.getHeaderView(0).findViewById(R.id.txtUserName);
         tabIndicater = findViewById(R.id.tab_indicator);
@@ -153,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
         listMovieBanner = new ArrayList<>();
         listKidBanner = new ArrayList<>();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("banners");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("banners");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -208,15 +169,79 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
             }
         });
 
-        UpLoadMovie();
-
+        getListMovie();
 
         navigationView.setNavigationItemSelectedListener(this);
         imgAvatar.setOnClickListener(this);
-        showUserInfomation();
+        showUserInformation();
     }
 
-    private void showUserInfomation() {
+    protected void getListMovie() {
+        categories = new ArrayList<>();
+        fireStore.collection("category").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    Category category;
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        category = new Category(document.getId(), document.getData().get("type").toString());
+                        categories.add(category);
+                    }
+                    Log.d(TAG, "List category" + categories.toString());
+                    getListMovieByCategory();
+                } else {
+                    Log.d(TAG, "Error getting list category: ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void getListMovieByCategory() {
+        movies = new ArrayList<>();
+        fireStore.collection("movie").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Movie movie;
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    movie = document.toObject(Movie.class);
+                    movie.setId(document.getId());
+                    movies.add(movie);
+                }
+                Log.d(TAG, "List movie" + movies.toString());
+
+                List<Map<String, Object>> categoryWithMovies = new ArrayList<>();
+                Map<String, Object> categoryWithMovie;
+                List<Movie> temps;
+                for (Category category : categories) {
+                    temps = new ArrayList<>();
+                    for (Movie temp : movies) {
+                        if (temp.getType().equals(category.getType())) {
+                            temps.add(temp);
+                        }
+                    }
+                    if (!temps.isEmpty()) {
+                        categoryWithMovie = new HashMap<>();
+                        categoryWithMovie.put("category", category.getType());
+                        categoryWithMovie.put("movies", temps);
+                        categoryWithMovies.add(categoryWithMovie);
+                    }
+                }
+
+                setCategoryWithMoviesAdapter(categoryWithMovies);
+            } else {
+                Log.d(TAG, "Error getting list movie: ", task.getException());
+            }
+        });
+    }
+
+    private void setCategoryWithMoviesAdapter(List<Map<String, Object>> categoryWithMovies) {
+        RecyclerView categoryWithMoviesRecycle = findViewById(R.id.rcv_allcate);
+        categoryWithMoviesRecycle.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        MainRecycleAdapter mainRecycleAdapter = new MainRecycleAdapter(this, categoryWithMovies, this);
+        mainRecycleAdapter.notifyDataSetChanged();
+        categoryWithMoviesRecycle.setAdapter(mainRecycleAdapter);
+    }
+
+    private void showUserInformation() {
         if (user == null)
             return;
         if (user.getDisplayName() == null) {
@@ -229,18 +254,9 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
         Glide.with(MainActivity.this).load(user.getPhotoUrl()).error(R.drawable.user1).into(imgUser);
     }
 
-    private void setCategoryAdapter(List<AllCategory> listCategory) {
-        categoryRecycle = findViewById(R.id.rcv_allcate);
-        categoryRecycle.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        mainRecycleAdapter = new MainRecycleAdapter(this, listCategory, this);
-        mainRecycleAdapter.notifyDataSetChanged();
-        categoryRecycle.setAdapter(mainRecycleAdapter);
-
-    }
-
     private void setBannerAdapter(List<BannerMovie> listBannerMovie) {
         viewPager = findViewById(R.id.bannerViewPager);
-        bannerMovieAdapter = new BannerMovieAdapter(MainActivity.this, listBannerMovie);
+        BannerMovieAdapter bannerMovieAdapter = new BannerMovieAdapter(MainActivity.this, listBannerMovie);
         bannerMovieAdapter.notifyDataSetChanged();
         viewPager.setAdapter(bannerMovieAdapter);
         tabIndicater.setupWithViewPager(viewPager);
@@ -248,23 +264,6 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
         Timer autoSlider = new Timer();
         autoSlider.schedule(new AutoSlider(listBannerMovie), 4000, 6000);
         tabIndicater.setupWithViewPager(viewPager, true);
-    }
-
-    private void checkAndRequesPermissions() {
-        String[] permissions = new String[]{
-                Manifest.permission.INTERNET
-        };
-
-        List<String> listPermissionNeeded = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                listPermissionNeeded.add(permission);
-            }
-        }
-        if (!listPermissionNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(this, listPermissionNeeded.toArray(new String[listPermissionNeeded.size()]), 1);
-
-        }
     }
 
     @Override
@@ -295,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
                 break;
             case R.id.nav_search:
                 Intent intent = new Intent(this, FavoriteMovie.class);
-                intent.putExtra(NAV_SEARCH_KEY, "nav_search");
+                intent.putExtra("nav_search", "nav_search");
                 startActivity(intent);
                 drawerLayout.closeDrawer(GravityCompat.END);
                 break;

@@ -160,10 +160,8 @@ public class RegisterScreen extends AppCompatActivity implements View.OnClickLis
 
                 break;
             case R.id.btn_reg_facebook:
-                startActivity(new Intent(RegisterScreen.this, com.example.movie_streaming.RegisterFacebook.class));
                 break;
             case R.id.btn_reg_google:
-                startActivity(new Intent(RegisterScreen.this, com.example.movie_streaming.RegisterGmail.class));
                 break;
         }
     }
