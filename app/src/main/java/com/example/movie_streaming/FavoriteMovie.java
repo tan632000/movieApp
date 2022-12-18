@@ -128,8 +128,7 @@ public class FavoriteMovie extends AppCompatActivity implements FavoriteAdapter.
                 }
                 for (DataSnapshot data : snapshot.getChildren()) {
                     CategoryItem movie = data.getValue(CategoryItem.class);
-                    Favorite favorite = new Favorite(null, movie.getName(), movie.getImg(),
-                            movie.getType(), movie.getVideo(), user.getUid());
+                    Favorite favorite = null;
                     mdata.add(favorite);
                     adapter = new FavoriteAdapter(FavoriteMovie.this, mdata, FavoriteMovie.this::onFavoriteItemClick);
                     rcvFav.setAdapter(adapter);
@@ -169,9 +168,9 @@ public class FavoriteMovie extends AppCompatActivity implements FavoriteAdapter.
     }
 
     private void removeFavorite(FirebaseUser user, Favorite item) {
-        Favorite currenFavorite;
+        Favorite currenFavorite = new Favorite();
 
-        currenFavorite = new Favorite(item.getId(), item.getName(), item.getImg(), item.getType(), item.getVideo(), item.getUserUid());
+//        currenFavorite = new Favorite(item.getId(), item.getName(), item.getImg(), item.getType(), item.getVideo(), item.getUserUid());
 
         reference = FirebaseDatabase.getInstance().getReference("favorite");
         reference.addValueEventListener(new ValueEventListener() {

@@ -155,9 +155,6 @@ public class RegisterScreen extends AppCompatActivity implements View.OnClickLis
                         progressBar.setVisibility(View.GONE);
                     }
                 });
-
-
-
                 break;
             case R.id.btn_reg_facebook:
                 break;

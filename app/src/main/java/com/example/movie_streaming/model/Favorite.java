@@ -3,18 +3,15 @@ package com.example.movie_streaming.model;
 import java.io.Serializable;
 
 public class Favorite implements Serializable {
-    private String name, img, type, video, userUid;
     private String id;
+    private String movieId;
+    private String userUid;
 
     public Favorite() {
     }
 
-    public Favorite(String id, String name, String img, String type, String video, String userUid) {
-        this.id = id;
-        this.name = name;
-        this.img = img;
-        this.type = type;
-        this.video = video;
+    public Favorite(String movieId, String userUid) {
+        this.movieId = movieId;
         this.userUid = userUid;
     }
 
@@ -26,36 +23,12 @@ public class Favorite implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getMovieId() {
+        return movieId;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getVideo() {
-        return video;
-    }
-
-    public void setVideo(String video) {
-        this.video = video;
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
     }
 
     public String getUserUid() {
@@ -64,5 +37,13 @@ public class Favorite implements Serializable {
 
     public void setUserUid(String userUid) {
         this.userUid = userUid;
+    }
+
+    @Override
+    public String toString() {
+        return "Favorite{" +
+                "movieId='" + movieId + '\'' +
+                ", userId='" + userUid + '\'' +
+                '}';
     }
 }

@@ -1,42 +1,33 @@
 {
   "project_info": {
-    "project_number": "523239170881",
-    "firebase_url": "https://movieapp-dd802-default-rtdb.firebaseio.com",
-    "project_id": "movieapp-dd802",
-    "storage_bucket": "movieapp-dd802.appspot.com"
+    "project_number": "934259957710",
+    "project_id": "moviestreaming1-e0e00",
+    "storage_bucket": "moviestreaming1-e0e00.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:523239170881:android:26390dd4e97f95871677c0",
+        "mobilesdk_app_id": "1:934259957710:android:59989793c0a6e2fd34959f",
         "android_client_info": {
           "package_name": "com.example.movie_streaming"
         }
       },
       "oauth_client": [
         {
-          "client_id": "523239170881-753n7d28rbq40h80b2bfl5f01vut68fr.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.movie_streaming",
-            "certificate_hash": "dd7ba08f965395913ecdb1b75864ebd261f0f135"
-          }
-        },
-        {
-          "client_id": "523239170881-j0o51moo29v1cavlhjs68f0fuujbma1l.apps.googleusercontent.com",
+          "client_id": "934259957710-17oato50mr1b87ef2q8mp7upifmgdaig.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDBpYwMG4UD2u_N7pwUPC8Eey0dYNgiN1Y"
+          "current_key": "AIzaSyAatbZSH5YSkEY4hLMO77BQoQad6ym2Now"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "523239170881-j0o51moo29v1cavlhjs68f0fuujbma1l.apps.googleusercontent.com",
+              "client_id": "934259957710-17oato50mr1b87ef2q8mp7upifmgdaig.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

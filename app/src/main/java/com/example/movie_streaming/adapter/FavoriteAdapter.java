@@ -43,9 +43,9 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     public void onBindViewHolder(FavoriteViewHolder holder, int position) {
         Favorite favorite = listItem.get(position);
 
-        holder.txtTitle.setText(favorite.getName());
-        holder.txtType.setText(favorite.getType());
-        Glide.with(context).load(favorite.getImg()).into(holder.imgPoster);
+//        holder.txtTitle.setText(favorite.getName());
+//        holder.txtType.setText(favorite.getType());
+//        Glide.with(context).load(favorite.getImg()).into(holder.imgPoster);
     }
 
     @Override
@@ -64,8 +64,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
                 }else{
                     List<Favorite> list = new ArrayList<>();
                     for (Favorite favorite : listItemOld){
-                        if (favorite.getName().toLowerCase().contains(keyword))
-                            list.add(favorite);
+//                        if (favorite.getName().toLowerCase().contains(keyword))
+//                            list.add(favorite);
                     }
                     listItem = list;
                 }
