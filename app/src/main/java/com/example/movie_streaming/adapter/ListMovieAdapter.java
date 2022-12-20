@@ -12,21 +12,19 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.movie_streaming.R;
+import com.example.movie_streaming.model.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import com.example.movie_streaming.R;
-import com.example.movie_streaming.model.Favorite;
+public class ListMovieAdapter extends RecyclerView.Adapter<ListMovieAdapter.FavoriteViewHolder> implements Filterable {
 
-public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder> implements Filterable {
-
-    private Context context;
-    List<Favorite> listItem, listItemOld;
     final private ListItemClickListener mOnClickListener;
+    List<Movie> listItem, listItemOld;
+    private final Context context;
 
-    public FavoriteAdapter(Context context, List<Favorite> listItem, ListItemClickListener mOnClickListener) {
+    public ListMovieAdapter(Context context, List<Movie> listItem, ListItemClickListener mOnClickListener) {
         this.context = context;
         this.listItem = listItem;
         this.mOnClickListener = mOnClickListener;
@@ -41,11 +39,10 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
     @Override
     public void onBindViewHolder(FavoriteViewHolder holder, int position) {
-        Favorite favorite = listItem.get(position);
-
-//        holder.txtTitle.setText(favorite.getName());
-//        holder.txtType.setText(favorite.getType());
-//        Glide.with(context).load(favorite.getImg()).into(holder.imgPoster);
+        Movie movie = listItem.get(position);
+        holder.txtTitle.setText(movie.getName());
+        holder.txtType.setText(movie.getType());
+        Glide.with(context).load(movie.getImg()).into(holder.imgPoster);
     }
 
     @Override
@@ -59,13 +56,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 String keyword = constraint.toString().toLowerCase();
-                if (keyword.isEmpty()){
+                if (keyword.isEmpty()) {
                     listItem = listItemOld;
-                }else{
-                    List<Favorite> list = new ArrayList<>();
-                    for (Favorite favorite : listItemOld){
-//                        if (favorite.getName().toLowerCase().contains(keyword))
-//                            list.add(favorite);
+                } else {
+                    List<Movie> list = new ArrayList<>();
+                    for (Movie movie : listItemOld) {
+                        if (movie.getName().toLowerCase().contains(keyword))
+                            list.add(movie);
                     }
                     listItem = list;
                 }
@@ -77,13 +74,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                listItem = (List<Favorite>) results.values;
+                listItem = (List<Movie>) results.values;
                 notifyDataSetChanged();
             }
         };
     }
 
-    public interface ListItemClickListener{
+    public interface ListItemClickListener {
         void onFavoriteItemClick(int clickedItemIndex);
     }
 

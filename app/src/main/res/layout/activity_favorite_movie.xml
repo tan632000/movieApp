@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".FavoriteMovie"
+    tools:context=".ListMovie"
     android:background="@color/background"
     android:id="@+id/layout_main_fav">
 

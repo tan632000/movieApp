@@ -7,7 +7,7 @@
             android:title="@string/nav_home" />
 
         <item
-            android:id="@+id/nav_fav"
+            android:id="@+id/nav_favorite"
             android:icon="@drawable/ic_baseline_favorite_24"
             android:title="@string/nav_fav" />
 

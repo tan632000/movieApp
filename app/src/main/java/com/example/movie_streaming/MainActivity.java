@@ -22,7 +22,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.example.movie_streaming.adapter.BannerMovieAdapter;
-import com.example.movie_streaming.adapter.MainRecycleAdapter;
+import com.example.movie_streaming.adapter.MainActivityAdapter;
 import com.example.movie_streaming.model.Category;
 import com.example.movie_streaming.model.Movie;
 import com.google.android.material.navigation.NavigationView;
@@ -41,15 +41,15 @@ import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements MainRecycleAdapter.ListItemClickListener, View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements MainActivityAdapter.ListItemClickListener, View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = "MainActivity";
-    private TabLayout tabIndicator;
     private TextView txtName, txtUsername;
     private FirebaseFirestore fireStore;
     private List<Category> categories;
     private DrawerLayout drawerLayout;
     private CircleImageView imgUser;
+    private TabLayout tabIndicator;
     private ViewPager viewPager;
     private List<Movie> movies;
     private FirebaseUser user;
@@ -159,11 +159,11 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
     }
 
     private void setCategoryWithMoviesAdapter(List<Map<String, Object>> categoryWithMovies) {
+        MainActivityAdapter mainActivityAdapter = new MainActivityAdapter(this, categoryWithMovies, this);
+        mainActivityAdapter.notifyDataSetChanged();
         RecyclerView categoryWithMoviesRecycle = findViewById(R.id.rcv_allcate);
         categoryWithMoviesRecycle.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        MainRecycleAdapter mainRecycleAdapter = new MainRecycleAdapter(this, categoryWithMovies, this);
-        mainRecycleAdapter.notifyDataSetChanged();
-        categoryWithMoviesRecycle.setAdapter(mainRecycleAdapter);
+        categoryWithMoviesRecycle.setAdapter(mainActivityAdapter);
     }
 
     private void setBannerAdapter(List<Movie> movies) {
@@ -204,17 +204,18 @@ public class MainActivity extends AppCompatActivity implements MainRecycleAdapte
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        Intent intent = new Intent(this, ListMovie.class);
         int id = item.getItemId();
         switch (id) {
-            case R.id.nav_fav:
-                startActivity(new Intent(this, FavoriteMovie.class));
+            case R.id.nav_favorite:
+                intent.putExtra("type", "favorite");
                 drawerLayout.closeDrawer(GravityCompat.END);
+                startActivity(intent);
                 break;
             case R.id.nav_search:
-                Intent intent = new Intent(this, FavoriteMovie.class);
-                intent.putExtra("nav_search", "nav_search");
-                startActivity(intent);
+                intent.putExtra("type", "search");
                 drawerLayout.closeDrawer(GravityCompat.END);
+                startActivity(intent);
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();

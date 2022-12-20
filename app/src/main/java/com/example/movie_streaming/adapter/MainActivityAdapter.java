@@ -15,13 +15,13 @@ import com.example.movie_streaming.model.Movie;
 import java.util.List;
 import java.util.Map;
 
-public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.MainViewHolder> {
+public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.MainViewHolder> {
 
-    Context context;
-    List<Map<String, Object>> categoryWithMovies;
-    final private ListItemClickListener mOnClickListener;
+    private final Context context;
+    private final List<Map<String, Object>> categoryWithMovies;
+    private final ListItemClickListener mOnClickListener;
 
-    public MainRecycleAdapter(Context context, List<Map<String, Object>> categoryWithMovies, ListItemClickListener mOnClickListener) {
+    public MainActivityAdapter(Context context, List<Map<String, Object>> categoryWithMovies, ListItemClickListener mOnClickListener) {
         this.context = context;
         this.categoryWithMovies = categoryWithMovies;
         this.mOnClickListener = mOnClickListener;
@@ -41,9 +41,9 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
     }
 
     private void setItemRecycle(RecyclerView rcvItem, List<Movie> movies) {
-        MovieAdapter movieAdapter = new MovieAdapter(context, movies);
+        MovieDetailAdapter movieDetailAdapter = new MovieDetailAdapter(context, movies);
         rcvItem.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
-        rcvItem.setAdapter(movieAdapter);
+        rcvItem.setAdapter(movieDetailAdapter);
     }
 
     @Override
@@ -69,8 +69,8 @@ public class MainRecycleAdapter extends RecyclerView.Adapter<MainRecycleAdapter.
 
         @Override
         public void onClick(View view) {
-            int clikedPosition = getAdapterPosition();
-            mOnClickListener.onCategoryItemClick(clikedPosition);
+            int clickedPosition = getAdapterPosition();
+            mOnClickListener.onCategoryItemClick(clickedPosition);
         }
     }
 

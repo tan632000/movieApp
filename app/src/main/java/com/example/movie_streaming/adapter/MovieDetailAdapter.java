@@ -16,11 +16,11 @@ import com.example.movie_streaming.model.Movie;
 
 import java.util.List;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ItemViewHolder> {
-    Context context;
-    List<Movie> movies;
+public class MovieDetailAdapter extends RecyclerView.Adapter<MovieDetailAdapter.ItemViewHolder> {
+    private final Context context;
+    private final List<Movie> movies;
 
-    public MovieAdapter(Context context, List<Movie> movies) {
+    public MovieDetailAdapter(Context context, List<Movie> movies) {
         this.context = context;
         this.movies = movies;
     }
