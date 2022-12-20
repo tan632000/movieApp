@@ -10,6 +10,12 @@ public class Favorite implements Serializable {
     public Favorite() {
     }
 
+    public Favorite(String id, String movieId, String userUid) {
+        this.id = id;
+        this.movieId = movieId;
+        this.userUid = userUid;
+    }
+
     public Favorite(String movieId, String userUid) {
         this.movieId = movieId;
         this.userUid = userUid;

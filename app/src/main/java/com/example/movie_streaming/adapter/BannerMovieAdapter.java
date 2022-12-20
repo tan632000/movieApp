@@ -10,51 +10,46 @@ import android.widget.ImageView;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
+import com.example.movie_streaming.MovieDetail;
+import com.example.movie_streaming.R;
+import com.example.movie_streaming.model.Movie;
 
 import java.util.List;
 
-import com.example.movie_streaming.MovieDetail;
-import com.example.movie_streaming.R;
-import com.example.movie_streaming.model.BannerMovie;
-
 public class BannerMovieAdapter extends PagerAdapter {
-    Context context;
-    List<BannerMovie> listBanner;
+    private final List<Movie> movies;
+    private final Context context;
 
-    public BannerMovieAdapter(Context context, List<BannerMovie> listBanner) {
+    public BannerMovieAdapter(Context context, List<Movie> movies) {
         this.context = context;
-        this.listBanner = listBanner;
+        this.movies = movies;
     }
 
     @Override
     public int getCount() {
-        return listBanner.size();
+        return movies.size();
     }
 
     @Override
-    public boolean isViewFromObject( View view, Object object) {
+    public boolean isViewFromObject(View view, Object object) {
         return view == object;
     }
 
     @Override
-    public void destroyItem( ViewGroup container, int position, Object object) {
+    public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
     }
-
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = LayoutInflater.from(context).inflate(R.layout.banner_movie, null);
         ImageView imgBanner = view.findViewById(R.id.img_banner);
-        Glide.with(context).load(listBanner.get(position).getImg()).into(imgBanner);
+        Glide.with(context).load(movies.get(position).getImg()).into(imgBanner);
         container.addView(view);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, MovieDetail.class);
-                intent.putExtra("banner", listBanner.get(position));
-                context.startActivity(intent);
-            }
+        view.setOnClickListener(view1 -> {
+            Intent intent = new Intent(context, MovieDetail.class);
+            intent.putExtra("movie", movies.get(position));
+            context.startActivity(intent);
         });
         return view;
     }

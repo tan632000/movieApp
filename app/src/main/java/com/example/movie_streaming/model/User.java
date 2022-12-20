@@ -6,16 +6,16 @@ import java.util.List;
 
 public class User implements Serializable {
     private String username, password, name, avatar, uid;
-    private List<CategoryItem> favorite;
+    private List<Favorite> favorites;
 
     public User() {
     }
 
-    public User(String username, String password, String name, List<CategoryItem> favoriteMovie, String img, String uid) {
+    public User(String username, String password, String name, List<Favorite> favorites, String img, String uid) {
         this.username = username;
         this.password = password;
         this.name = name;
-        this.favorite = favoriteMovie;
+        this.favorites = favorites;
         this.avatar = img;
         this.uid = uid;
     }
@@ -44,12 +44,12 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public List<CategoryItem> getFavorite() {
-        return favorite;
+    public List<Favorite> getFavorites() {
+        return favorites;
     }
 
-    public void setFavorite(List<CategoryItem> favoriteMovie) {
-        this.favorite = favoriteMovie;
+    public void setFavorites(List<Favorite> favorites) {
+        this.favorites = favorites;
     }
 
     public String getAvatar() {
