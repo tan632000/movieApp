@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
     private FirebaseFirestore fireStore;
     private List<Category> categories;
     private DrawerLayout drawerLayout;
-    private CircleImageView imgUser;
+    private CircleImageView avatarUser, avatarUserSideBar;
     private TabLayout tabIndicator;
     private ViewPager viewPager;
     private List<Movie> movies;
@@ -91,16 +91,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
         tabIndicator = findViewById(R.id.tab_indicator);
 
         NavigationView navigationView = findViewById(R.id.nav_user);
-        CircleImageView imgAvatar = findViewById(R.id.imgAvatar);
+        avatarUserSideBar = navigationView.getHeaderView(0).findViewById(R.id.avatarUserSideBar);
         txtUsername = navigationView.getHeaderView(0).findViewById(R.id.txtUserName);
         txtName = navigationView.getHeaderView(0).findViewById(R.id.txtNavName);
-        imgUser = navigationView.getHeaderView(0).findViewById(R.id.img_user);
-
-        getListMovie();
-
         navigationView.setNavigationItemSelectedListener(this);
-        imgAvatar.setOnClickListener(this);
+
+        avatarUser = findViewById(R.id.avatarUser);
+        avatarUser.setOnClickListener(this);
+
         showUserInformation();
+        getListMovie();
     }
 
     private void getListMovie() {
@@ -128,7 +128,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
             if (task.isSuccessful()) {
                 Category category;
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    category = new Category(document.getId(), document.getData().get("type").toString());
+                    Object type = document.getData().get("type");
+                    category = new Category(document.getId(), type != null ? type.toString() : "");
                     categories.add(category);
                 }
                 Log.d(TAG, "List category" + categories.toString());
@@ -179,21 +180,32 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
     }
 
     private void showUserInformation() {
-        if (user == null)
-            return;
-        if (user.getDisplayName() == null) {
-            txtName.setVisibility(View.GONE);
-        } else {
-            txtName.setVisibility(View.VISIBLE);
-            txtName.setText(user.getDisplayName());
-        }
-        txtUsername.setText(user.getEmail());
-        Glide.with(MainActivity.this).load(user.getPhotoUrl()).error(R.drawable.user1).into(imgUser);
+        fireStore.collection("user").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Object username = document.getData().get("username");
+                    if (username != null && username.toString().equals(user.getEmail())) {
+                        txtUsername.setText(username.toString());
+                        Object name = document.getData().get("name");
+                        txtName.setText(name != null ? name.toString() : "");
+                        Object avatar = document.getData().get("avatar");
+                        Glide.with(MainActivity.this)
+                                .load(avatar != null ? avatar.toString() : "")
+                                .error(R.drawable.avatar).into(avatarUserSideBar);
+                        Glide.with(MainActivity.this)
+                                .load(avatar != null ? avatar.toString() : "")
+                                .error(R.drawable.avatar).into(avatarUser);
+                    }
+                }
+            } else {
+                Log.d(TAG, "Error getting list user: ", task.getException());
+            }
+        });
     }
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.imgAvatar) {
+        if (view.getId() == R.id.avatarUser) {
             showNavigationBar();
         }
     }
@@ -204,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Intent intent = new Intent(this, ListMovie.class);
+        Intent intent = new Intent(this, SearchMovie.class);
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_favorite:

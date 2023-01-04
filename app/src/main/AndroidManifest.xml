@@ -11,10 +11,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/logo_media"
         android:supportsRtl="true"
         android:theme="@style/Theme.Movie_Streaming">
-        <activity android:name=".ListMovie" />
+        <activity android:name=".SearchMovie" />
         <activity android:name=".RegisterScreen" />
         <activity android:name=".LoginScreen"/>
         <activity android:name=".MainActivity" />

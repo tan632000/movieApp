@@ -150,7 +150,7 @@ public class RegisterScreen extends AppCompatActivity implements View.OnClickLis
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(RegisterScreen.this, "Fail", Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterScreen.this, "Đăng ký thất bại", Toast.LENGTH_LONG).show();
                         }
                         progressBar.setVisibility(View.GONE);
                     }
@@ -183,10 +183,10 @@ public class RegisterScreen extends AppCompatActivity implements View.OnClickLis
         String noWhiteSpace = "\\A\\w{4,20}\\z";
 
         if (val.isEmpty()) {
-            edtPass.setError("Nhập mật khẩu");
+            edtPass.setError("Xin hãy nhập mật khẩu");
             return false;
         } else if (val.length() >= 15) {
-            edtPass.setError("Không được quá 15 ký tự");
+            edtPass.setError("Mật khẩu không được quá 15 ký tự");
             return false;
         } else if (!val.matches(noWhiteSpace)) {
             edtPass.setError("Mật khẩu không hợp lệ");
@@ -199,9 +199,8 @@ public class RegisterScreen extends AppCompatActivity implements View.OnClickLis
 
     private Boolean validateName() {
         String val = edtName.getEditText().getText().toString();
-
         if (val.isEmpty()) {
-            edtName.setError("Điền họ tên");
+            edtName.setError("Xin hãy nhập họ tên");
             return false;
         } else {
             edtName.setError(null);

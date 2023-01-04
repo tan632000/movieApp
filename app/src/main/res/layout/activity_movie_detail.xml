@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/icons8_netflix_48px" />
+                android:src="@drawable/media_title" />
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
     <ImageView
@@ -42,7 +42,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
-        android:src="@drawable/netflix_logo_icon"/>
+        android:src="@drawable/media_logo"/>
     <TextView
         android:id="@+id/txtNameMovie"
         android:layout_width="wrap_content"

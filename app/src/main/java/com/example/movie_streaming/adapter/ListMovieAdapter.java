@@ -68,10 +68,8 @@ public class ListMovieAdapter extends RecyclerView.Adapter<ListMovieAdapter.Favo
                 }
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = listItem;
-
                 return filterResults;
             }
-
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 listItem = (List<Movie>) results.values;

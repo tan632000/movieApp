@@ -11,7 +11,7 @@
         android:id="@+id/splash_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:lottie_rawRes="@raw/netflixlogo"
+        app:lottie_rawRes="@raw/media"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
         android:transitionName="logo_trans"/>
